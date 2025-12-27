@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let cropper = null;
     const historyList = document.getElementById('history-list');
     let historyData = [];
-
     let currentMode = 'custom'; 
     const SCALE = 4;
     const BASE_SIZE = 300;
@@ -273,13 +272,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (code) {
             let readText = code.data;
             
-            if (readText !== expectedText && code.binaryData) {
+            if (code.binaryData) {
                 try {
                     const decoder = new TextDecoder('utf-8');
                     const decoded = decoder.decode(new Uint8Array(code.binaryData));
-                    if (decoded) readText = decoded;
+                    if (decoded) {
+                        readText = decoded;
+                    }
                 } catch (e) {
-                    console.error('Encoding error:', e);
+                    console.warn('UTF-8 Decode Failed, using default data:', e);
                 }
             }
 
