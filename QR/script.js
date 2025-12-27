@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-	
     const qrCanvas = document.getElementById('qr-canvas');
     const ctx = qrCanvas.getContext('2d');
     const qrText = document.getElementById('qr-text');
@@ -14,29 +13,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const timerSeconds = document.getElementById('timer-seconds');
     const stopTimerBtn = document.getElementById('stop-timer-btn');
     let timerInterval = null;
-
     const logoInput = document.getElementById('logo-input');
     const removeLogoBtn = document.getElementById('remove-logo-btn');
     const footerInput = document.getElementById('footer-text');
     const frameColorSelect = document.getElementById('frame-color-select');
     const invertColorCheck = document.getElementById('invert-color'); 
     let currentLogoImg = null;
-
     const modal = document.getElementById('cropper-modal');
     const cropperImg = document.getElementById('cropper-img');
     const cropConfirmBtn = document.getElementById('crop-confirm');
     const cropCancelBtn = document.getElementById('crop-cancel');
     let cropper = null;
-
     const historyList = document.getElementById('history-list');
     let historyData = [];
-
     let currentMode = 'custom'; 
     const SCALE = 4;
     const BASE_SIZE = 300;
-
     qrCanvas.width = BASE_SIZE * SCALE;
     qrCanvas.height = BASE_SIZE * SCALE;
+
 
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -176,19 +171,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const qrContentSize = BASE_SIZE * SCALE; 
         const footerText = footerInput.value.trim();
         
-        const PADDING_VAL = 10 * SCALE;
-        const FRAME_VAL   = 15 * SCALE;
-        const TEXT_H_VAL  = 25 * SCALE;
+        const PADDING_VAL = 10 * SCALE; 
+        const FRAME_VAL   = 15 * SCALE; 
+        const TEXT_H_VAL  = 25 * SCALE; 
         const extraSpace = footerText ? TEXT_H_VAL : 0; 
+
         const frameColor = frameColorSelect.value;
         const hasFrame = frameColor !== 'none';
         const isInvert = invertColorCheck.checked;
+
         const bgColor = isInvert ? '#000000' : '#ffffff';
-        const qrColor = isInvert ? '#ffffff' : '#000000';        
+        const qrColor = isInvert ? '#ffffff' : '#000000';
+        
         const padding = PADDING_VAL; 
         const frameThickness = hasFrame ? FRAME_VAL : 0;
-        const totalWidth = qrContentSize + (padding * 2) + (frameThickness * 2) + (extraSpace * 2);        
+
+        const totalWidth = qrContentSize + (padding * 2) + (frameThickness * 2) + (extraSpace * 2);
         const totalHeight = qrContentSize + (padding * 2) + (frameThickness * 2) + (extraSpace * 2);
+
+        // 1. QR生成 (QRious)
         const qr = new QRious({
             value: text,
             size: qrContentSize,
@@ -199,6 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         qrCanvas.width = totalWidth;
         qrCanvas.height = totalHeight;
+
+        ctx.imageSmoothingEnabled = false;
         
         ctx.fillStyle = hasFrame ? frameColor : bgColor;
         ctx.fillRect(0, 0, totalWidth, totalHeight);
@@ -210,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const innerH = totalHeight - (frameThickness * 2);
         
         ctx.fillRect(innerX, innerY, innerW, innerH);
-
         const tempImg = new Image();
         tempImg.src = qr.toDataURL();
         tempImg.onload = () => {
@@ -218,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const qrY = frameThickness + padding + extraSpace;
 
             ctx.drawImage(tempImg, qrX, qrY);
-
+			
             if (currentLogoImg) {
                 const logoSize = qrContentSize * 0.25; 
                 const logoPos = (qrContentSize - logoSize) / 2;
@@ -238,20 +240,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (footerText) {
-                const fontSize = 14 * SCALE;
+                const fontSize = 14 * SCALE; 
                 ctx.font = `${fontSize}px Arial`;
                 ctx.fillStyle = qrColor;
                 ctx.textAlign = 'right';
                 ctx.textBaseline = 'middle';
                 
                 const textMarginRight = frameThickness + (10 * SCALE);
-                
                 const footerCenterY = totalHeight - frameThickness - (extraSpace / 2);
 
                 ctx.fillText(footerText, totalWidth - textMarginRight, footerCenterY);
             }
 
-            verifyQR(text);
+            verifyQR(text, qrX, qrY, qrContentSize);
 
             if (saveToHistory) {
                 addToHistory(text, qrCanvas.toDataURL());
@@ -259,8 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    function verifyQR(expectedText) {
-        const imageData = ctx.getImageData(0, 0, qrCanvas.width, qrCanvas.height);
+    function verifyQR(expectedText, x, y, size) {
+        const imageData = ctx.getImageData(x, y, size, size);
+        
         const code = jsQR(imageData.data, imageData.width, imageData.height, {
             inversionAttempts: "attemptBoth"
         });
@@ -274,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusMsg.className = 'status-box error';
             }
         } else {
-            statusMsg.textContent = '実機で確認してください';
+            statusMsg.textContent = '読み取り確認不可 (ロゴ等の影響の可能性があります)';
             statusMsg.className = 'status-box waiting';
         }
     }
@@ -322,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         img.onload = () => {
             qrCanvas.width = img.width;
             qrCanvas.height = img.height;
+            ctx.imageSmoothingEnabled = false;
             ctx.drawImage(img, 0, 0);
             
             statusMsg.textContent = '履歴から表示中';
