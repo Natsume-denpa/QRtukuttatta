@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRコード作成ツール</title>
+    <link rel="stylesheet" href="QR/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="sidebar">
+        <h3>生成履歴 (最新5件)</h3>
+        <div id="history-list" class="history-list">
+            <p class="empty-msg">履歴はありません</p>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <h1>QRコード作成ツール</h1>
+
+        <div class="card control-panel">
+            <div class="tabs">
+                <button class="tab-btn active" data-mode="custom">文字指定</button>
+                <button class="tab-btn" data-mode="random">ランダム</button>
+            </div>
+
+            <div id="input-area-custom" class="input-group">
+                <label>変換する文字:</label>
+                <input type="text" id="qr-text" placeholder="URLやテキストを入力" value="https://x.com/yu_">
+            </div>
+
+            <div id="input-area-random" class="input-group" style="display:none;">
+                <label>ランダム文字数:</label>
+                <input type="number" id="random-length" value="16" min="4" max="128">
+                
+                <div class="timer-settings">
+                    <label>
+                        <input type="checkbox" id="timer-mode"> 秒数指定で連続生成
+                    </label>
+                    <input type="number" id="timer-seconds" value="3" min="1" disabled>
+                    <span>秒ごと</span>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button id="generate-btn" class="btn primary">QR生成</button>
+                <button id="stop-timer-btn" class="btn danger" style="display:none;">停止</button>
+            </div>
+        </div>
+
+        <div class="card edit-panel">
+            <h3>編集オプション</h3>
+            
+            <div class="edit-grid">
+                <div class="edit-section">
+                    <h4>デザイン</h4>
+                    <div class="form-group">
+                        <label>フレーム色</label>
+                        <select id="frame-color-select" class="form-select">
+                            <option value="none">なし</option>
+                            <option value="#000000">黒</option>
+                            <option value="#3b82f6">青</option>
+                            <option value="#ef4444">赤</option>
+                            <option value="#fbbf24">黄</option>
+                            <option value="#f97316">オレンジ</option>
+                            <option value="#22c55e">緑</option>
+                            <option value="#38bdf8">水色</option>
+                            <option value="#a855f7">紫</option>
+                            <option value="#9ca3af">グレー</option>
+                            <option value="#ffffff">白</option>
+                        </select>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="invert-color">
+                            <span class="label-text">色を反転 (白QR/黒背景)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="edit-section">
+                    <h4>センターロゴ</h4>
+                    <div class="form-group">
+                        <label class="file-upload-btn">
+                            画像を選択
+                            <input type="file" id="logo-input" accept="image/*">
+                        </label>
+                        <button id="remove-logo-btn" class="btn sm danger" style="display:none; margin-top:5px;">削除</button>
+                    </div>
+                </div>
+
+                <div class="edit-section">
+                    <h4>テキスト追加</h4>
+                    <div class="form-group">
+                        <label>右下プリント文字</label>
+                        <input type="text" id="footer-text" placeholder="例: 浜田">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card preview-area">
+            <h3>プレビュー</h3>
+            <div class="canvas-wrapper">
+                <canvas id="qr-canvas"></canvas>
+            </div>
+            
+            <div id="status-msg" class="status-box waiting">未生成</div>
+
+            <div class="save-area">
+                <button id="save-btn" class="btn success">保存する (PNG)</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="cropper-modal" class="modal">
+    <div class="modal-content">
+        <h3>ロゴの範囲を指定</h3>
+        <div class="img-container">
+            <img id="cropper-img" src="">
+        </div>
+        <div class="modal-actions">
+            <button id="crop-cancel" class="btn">キャンセル</button>
+            <button id="crop-confirm" class="btn primary">決定</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script src="QR/script.js"></script>
+
+</body>
+</html>
