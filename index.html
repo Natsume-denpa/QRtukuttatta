@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QRコード作成ツール</title>
+    <title>QR作成ツール</title>
     <link rel="stylesheet" href="QR/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
 </head>
@@ -28,19 +28,26 @@
 
             <div id="input-area-custom" class="input-group">
                 <label>変換する文字:</label>
-                <input type="text" id="qr-text" placeholder="URLやテキストを入力" value="https://x.com/yu_">
+                <input type="text" id="qr-text" placeholder="URLやテキストを入力" value="https://example.com">
             </div>
 
             <div id="input-area-random" class="input-group" style="display:none;">
-                <label>ランダム文字数:</label>
-                <input type="number" id="random-length" value="16" min="4" max="128">
+                <div class="form-block">
+                    <label>ランダム文字数:</label>
+                    <input type="number" id="random-length" value="16" min="4" max="128">
+                </div>
                 
-                <div class="timer-settings">
-                    <label>
-                        <input type="checkbox" id="timer-mode"> 秒数指定で連続生成
-                    </label>
-                    <input type="number" id="timer-seconds" value="3" min="1" disabled>
-                    <span>秒ごと</span>
+                <div class="form-block">
+                    <div class="timer-settings">
+                        <div class="timer-row">
+                            <input type="checkbox" id="timer-mode">
+                            <label for="timer-mode">秒数指定で連続生成</label>
+                        </div>
+                        <div class="timer-row input-row">
+                            <input type="number" id="timer-seconds" value="3" min="1" disabled>
+                            <span>秒ごと</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -55,7 +62,7 @@
             
             <div class="edit-grid">
                 <div class="edit-section">
-                    <h4>デザイン</h4>
+                    <h4>🎨 デザイン</h4>
                     <div class="form-group">
                         <label>フレーム色</label>
                         <select id="frame-color-select" class="form-select">
@@ -81,7 +88,7 @@
                 </div>
 
                 <div class="edit-section">
-                    <h4>センターロゴ</h4>
+                    <h4>🖼️ センターロゴ</h4>
                     <div class="form-group">
                         <label class="file-upload-btn">
                             画像を選択
@@ -92,15 +99,16 @@
                 </div>
 
                 <div class="edit-section">
-                    <h4>テキスト追加</h4>
+                    <h4>🔤 テキスト追加</h4>
                     <div class="form-group">
                         <label>右下プリント文字</label>
-                        <input type="text" id="footer-text" placeholder="例: 浜田">
+                        <input type="text" id="footer-text" placeholder="例: v1.0">
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- プレビュー -->
         <div class="card preview-area">
             <h3>プレビュー</h3>
             <div class="canvas-wrapper">
