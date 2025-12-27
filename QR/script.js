@@ -26,9 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let cropper = null;
     const historyList = document.getElementById('history-list');
     let historyData = [];
+
     let currentMode = 'custom'; 
     const SCALE = 4;
     const BASE_SIZE = 300;
+
     qrCanvas.width = BASE_SIZE * SCALE;
     qrCanvas.height = BASE_SIZE * SCALE;
 
@@ -174,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const PADDING_VAL = 10 * SCALE; 
         const FRAME_VAL   = 15 * SCALE; 
         const TEXT_H_VAL  = 25 * SCALE; 
+
         const extraSpace = footerText ? TEXT_H_VAL : 0; 
 
         const frameColor = frameColorSelect.value;
@@ -189,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalWidth = qrContentSize + (padding * 2) + (frameThickness * 2) + (extraSpace * 2);
         const totalHeight = qrContentSize + (padding * 2) + (frameThickness * 2) + (extraSpace * 2);
 
-        // 1. QR生成 (QRious)
         const qr = new QRious({
             value: text,
             size: qrContentSize,
@@ -200,9 +202,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         qrCanvas.width = totalWidth;
         qrCanvas.height = totalHeight;
-
-        ctx.imageSmoothingEnabled = false;
         
+        ctx.imageSmoothingEnabled = false;
+
         ctx.fillStyle = hasFrame ? frameColor : bgColor;
         ctx.fillRect(0, 0, totalWidth, totalHeight);
 
@@ -213,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const innerH = totalHeight - (frameThickness * 2);
         
         ctx.fillRect(innerX, innerY, innerW, innerH);
+
         const tempImg = new Image();
         tempImg.src = qr.toDataURL();
         tempImg.onload = () => {
@@ -220,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const qrY = frameThickness + padding + extraSpace;
 
             ctx.drawImage(tempImg, qrX, qrY);
-			
+
             if (currentLogoImg) {
                 const logoSize = qrContentSize * 0.25; 
                 const logoPos = (qrContentSize - logoSize) / 2;
@@ -268,15 +271,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (code) {
-            if (code.data === expectedText) {
+            let readText = code.data;
+            
+            if (readText !== expectedText && code.binaryData) {
+                try {
+                    const decoder = new TextDecoder('utf-8');
+                    const decoded = decoder.decode(new Uint8Array(code.binaryData));
+                    if (decoded) readText = decoded;
+                } catch (e) {
+                    console.error('Encoding error:', e);
+                }
+            }
+
+            if (readText === expectedText) {
                 statusMsg.textContent = '読み取り確認OK';
                 statusMsg.className = 'status-box ok';
             } else {
-                statusMsg.textContent = 'データ不一致';
+                statusMsg.textContent = 'データ不一致 (読取結果: ' + readText + ')';
                 statusMsg.className = 'status-box error';
             }
         } else {
-            statusMsg.textContent = '読み取り確認不可 (ロゴ等の影響の可能性があります)';
+            statusMsg.textContent = '読み取り確認不可';
             statusMsg.className = 'status-box waiting';
         }
     }
