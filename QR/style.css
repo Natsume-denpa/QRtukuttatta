@@ -21,7 +21,6 @@ body {
     min-height: 100vh;
 }
 
-/* サイドバー */
 .sidebar {
     width: 250px;
     background: var(--card-bg);
@@ -64,7 +63,6 @@ body {
     border: 1px solid #ddd;
 }
 
-/* メインコンテンツ */
 .main-content {
     flex: 1;
     padding: 20px;
@@ -87,7 +85,6 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* タブ */
 .tabs {
     display: flex;
     gap: 10px;
@@ -110,13 +107,48 @@ h1 {
     color: white;
 }
 
-/* フォーム共通 */
+.form-block {
+    margin-bottom: 15px;
+    width: 100%;
+}
+.form-block label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.timer-settings {
+    background: #f0f9ff;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #bae6fd;
+}
+.timer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.timer-row:last-child {
+    margin-bottom: 0;
+}
+.timer-row label {
+    margin: 0;
+    font-weight: normal;
+    cursor: pointer;
+}
+.input-row input {
+    width: 80px;
+}
+
 .input-group, .form-group {
     margin-bottom: 10px;
 }
 
 .input-group input[type="text"],
 .input-group input[type="number"],
+.form-block input[type="text"],
+.form-block input[type="number"],
 .form-select,
 .form-group input[type="text"] {
     padding: 10px;
@@ -127,7 +159,6 @@ h1 {
     box-sizing: border-box;
 }
 
-/* 編集エリアのグリッドレイアウト */
 .edit-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -159,7 +190,6 @@ h1 {
     color: #374151;
 }
 
-/* ファイルアップロードボタンの装飾 */
 .file-upload-btn {
     display: inline-block;
     background: #e5e7eb;
@@ -172,16 +202,9 @@ h1 {
     box-sizing: border-box;
     transition: background 0.2s;
 }
+.file-upload-btn:hover { background: #d1d5db; }
+.file-upload-btn input[type="file"] { display: none; }
 
-.file-upload-btn:hover {
-    background: #d1d5db;
-}
-
-.file-upload-btn input[type="file"] {
-    display: none;
-}
-
-/* ボタン */
 .btn {
     padding: 10px 20px;
     border: none;
@@ -192,29 +215,13 @@ h1 {
     font-size: 1rem;
     width: 100%;
 }
-
 .btn.primary { background: var(--primary); }
-.btn.primary:hover { background: var(--primary-hover); }
 .btn.success { background: var(--success); }
 .btn.danger { background: var(--danger); }
 .btn.sm { width: auto; font-size: 0.8rem; padding: 5px 10px; }
 
-/* タイマー設定 */
-.timer-settings {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 5px;
-    background: #f0f9ff;
-    padding: 10px;
-    border-radius: 6px;
-}
+.button-row { margin-top: 15px; }
 
-.button-row {
-    margin-top: 15px;
-}
-
-/* プレビュー */
 .canvas-wrapper {
     display: flex;
     justify-content: center;
@@ -227,13 +234,13 @@ h1 {
     margin-left: auto;
     margin-right: auto;
 }
-
 canvas {
     width: 100% !important;
     height: auto !important;
     max-height: 50vh;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     object-fit: contain;
+    image-rendering: pixelated; 
 }
 
 .status-box {
@@ -243,70 +250,32 @@ canvas {
     font-weight: bold;
     margin-bottom: 15px;
 }
-
 .status-box.waiting { background: #f3f4f6; color: #6b7280; }
 .status-box.ok { background: #d1fae5; color: #065f46; }
 .status-box.error { background: #fee2e2; color: #991b1b; }
 
-/* モーダル */
 .modal {
     display: none;
     position: fixed;
     z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.8);
-    align-items: center;
-    justify-content: center;
+    align-items: center; justify-content: center;
 }
-
 .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-    max-height: 90vh;
-    overflow-y: auto;
+    background: white; padding: 20px;
+    border-radius: 12px; width: 90%;
+    max-width: 500px; text-align: center;
+    max-height: 90vh; overflow-y: auto;
 }
-
-.img-container {
-    height: 300px;
-    background: #333;
-    margin: 10px 0;
-}
-
-.img-container img {
-    max-width: 100%;
-    display: block;
-}
-
-.modal-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-}
-
-.modal-actions .btn {
-    width: auto;
-}
-
-.modal-actions #crop-cancel {
-    background: #9ca3af;
-}
+.img-container { height: 300px; background: #333; margin: 10px 0; }
+.img-container img { max-width: 100%; display: block; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.modal-actions .btn { width: auto; }
+.modal-actions #crop-cancel { background: #9ca3af; }
 
 @media (max-width: 768px) {
-    .app-container {
-        flex-direction: column-reverse;
-    }
-
-    .sidebar {
-        width: 100%;
-        height: 200px;
-        border-right: none;
-        border-top: 1px solid var(--border);
-    }
+    .app-container { flex-direction: column-reverse; }
+    .sidebar { width: 100%; height: 200px; border-right: none; border-top: 1px solid var(--border); }
 }
