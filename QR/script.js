@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusMsg.className = 'status-box error';
             }
         } else {
-            statusMsg.textContent = '読み取り確認不可 (再生成してください)';
+            statusMsg.textContent = '実機で確認してください';
             statusMsg.className = 'status-box waiting';
         }
     }
